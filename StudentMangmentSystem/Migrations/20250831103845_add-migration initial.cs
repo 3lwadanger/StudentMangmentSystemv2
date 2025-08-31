@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StudentMangmentSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class addmigrationinitial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -89,6 +89,23 @@ namespace StudentMangmentSystem.Migrations
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "SuperAdmins",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SuperAdmins", x => x.UserId);
+                    table.ForeignKey(
+                        name: "FK_SuperAdmins_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
         }
 
         /// <inheritdoc />
@@ -105,6 +122,9 @@ namespace StudentMangmentSystem.Migrations
 
             migrationBuilder.DropTable(
                 name: "Students");
+
+            migrationBuilder.DropTable(
+                name: "SuperAdmins");
 
             migrationBuilder.DropTable(
                 name: "Users");

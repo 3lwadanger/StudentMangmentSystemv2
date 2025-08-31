@@ -96,7 +96,23 @@ using (var context = new StudentMangmentSystemDbContext(options))
             Console.WriteLine("ERROR! couldn't find Student profile.");
         }
     }
-    else
+        else if (user.Token == 'O')
+        {
+            var superAdmin = context.SuperAdmins
+                .FirstOrDefault(s => s.UserId == user.UserId);
+
+            if (superAdmin != null)
+            {
+                Console.WriteLine($"Welcome Student {superAdmin.Name}!");
+                superAdmin.showMenu();
+            }
+            else
+            {
+                Console.WriteLine("ERROR! couldn't find Student profile.");
+            }
+        }
+
+        else
     {
         Console.WriteLine("Unknown user type.");
     }

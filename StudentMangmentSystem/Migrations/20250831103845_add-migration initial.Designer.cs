@@ -12,8 +12,8 @@ using StudentMangmentSystem.Models;
 namespace StudentMangmentSystem.Migrations
 {
     [DbContext(typeof(StudentMangmentSystemDbContext))]
-    [Migration("20250826101253_initial")]
-    partial class initial
+    [Migration("20250831103845_add-migration initial")]
+    partial class addmigrationinitial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -113,6 +113,13 @@ namespace StudentMangmentSystem.Migrations
                     b.ToTable("Students", (string)null);
                 });
 
+            modelBuilder.Entity("StudentMangmentSystem.Models.SuperAdmin", b =>
+                {
+                    b.HasBaseType("StudentMangmentSystem.Models.user");
+
+                    b.ToTable("SuperAdmins", (string)null);
+                });
+
             modelBuilder.Entity("StudentMangmentSystem.Models.Admin", b =>
                 {
                     b.HasOne("StudentMangmentSystem.Models.user", null)
@@ -127,6 +134,15 @@ namespace StudentMangmentSystem.Migrations
                     b.HasOne("StudentMangmentSystem.Models.user", null)
                         .WithOne()
                         .HasForeignKey("StudentMangmentSystem.Models.Student", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("StudentMangmentSystem.Models.SuperAdmin", b =>
+                {
+                    b.HasOne("StudentMangmentSystem.Models.user", null)
+                        .WithOne()
+                        .HasForeignKey("StudentMangmentSystem.Models.SuperAdmin", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

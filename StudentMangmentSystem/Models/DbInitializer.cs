@@ -16,14 +16,32 @@ namespace StudentMangmentSystem.Models
                 return; 
             }
 
-            // ================== Admin ==================
-            var admin = new Admin
+            // ================== Super Admin ==================
+            var superAdmin = new SuperAdmin
+            {
+                Name = "Super Admin",
+                Email = "superadmin@system.com",
+                Password = "superadmin123",
+                Token = 'O'
+            };
+
+            // ================== Admins ==================
+            var admin1 = new Admin
             {
                 Name = "System Admin",
                 Email = "admin@system.com",
                 Password = "admin123",
                 Token = 'A'
             };
+
+            var admin2 = new Admin
+            {
+                Name = "Secondary Admin",
+                Email = "admin2@system.com",
+                Password = "admin123",
+                Token = 'A'
+            };
+
 
             // ================== Students ==================
             var students = new Student[]
@@ -54,7 +72,9 @@ namespace StudentMangmentSystem.Models
             };
 
             // ================== Add & Save ==================
-            context.Users.Add(admin);
+            context.Users.Add(superAdmin);
+            context.Users.Add(admin1);
+            context.Users.Add(admin2);
             context.Users.AddRange(students);
             context.Courses.AddRange(courses);
             context.SaveChanges(); // save so UserId and CourseId are generated

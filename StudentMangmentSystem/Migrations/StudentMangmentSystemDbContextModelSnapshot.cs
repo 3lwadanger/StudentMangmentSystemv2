@@ -110,6 +110,13 @@ namespace StudentMangmentSystem.Migrations
                     b.ToTable("Students", (string)null);
                 });
 
+            modelBuilder.Entity("StudentMangmentSystem.Models.SuperAdmin", b =>
+                {
+                    b.HasBaseType("StudentMangmentSystem.Models.user");
+
+                    b.ToTable("SuperAdmins", (string)null);
+                });
+
             modelBuilder.Entity("StudentMangmentSystem.Models.Admin", b =>
                 {
                     b.HasOne("StudentMangmentSystem.Models.user", null)
@@ -124,6 +131,15 @@ namespace StudentMangmentSystem.Migrations
                     b.HasOne("StudentMangmentSystem.Models.user", null)
                         .WithOne()
                         .HasForeignKey("StudentMangmentSystem.Models.Student", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("StudentMangmentSystem.Models.SuperAdmin", b =>
+                {
+                    b.HasOne("StudentMangmentSystem.Models.user", null)
+                        .WithOne()
+                        .HasForeignKey("StudentMangmentSystem.Models.SuperAdmin", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

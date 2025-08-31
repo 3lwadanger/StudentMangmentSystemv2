@@ -18,6 +18,8 @@ namespace StudentMangmentSystem.Models
         public DbSet<Admin> Admins { get; set; }
 
         public DbSet<Student> Students { get; set; }
+        public DbSet<SuperAdmin> SuperAdmins { get; set; }
+
         public DbSet<Course> Courses { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
 
@@ -34,6 +36,7 @@ namespace StudentMangmentSystem.Models
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(StudentMangmentSystemDbContext).Assembly);
 
             modelBuilder.Entity<user>().ToTable("Users");
+            modelBuilder.Entity<SuperAdmin>().ToTable("SuperAdmins");
             modelBuilder.Entity<Admin>().ToTable("Admins");
             modelBuilder.Entity<Student>().ToTable("Students");
             modelBuilder.Entity<Course>().ToTable("Courses");

@@ -6,11 +6,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static Azure.Core.HttpHeader;
 using static System.Console;
-using System.Net.Mail;
+using System.Text.RegularExpressions;
 
 namespace StudentMangmentSystem.Models
 {
@@ -442,8 +444,174 @@ namespace StudentMangmentSystem.Models
             double gpa = (totalGpa / actualCredits) * 4;
             WriteLine($" GPA: {Math.Round(gpa, 2)}"); 
         }
+        public void removeUser()
+        {
+            WriteLine("Enter User Name/Email: ");
+            string name = ReadLine();
+
+            var user = context.Users
+                .FirstOrDefault(u =>
+                    EF.Functions.Collate(u.Email, "SQL_Latin1_General_CP1_CS_AS") == name ||
+                    EF.Functions.Collate(u.Name, "SQL_Latin1_General_CP1_CS_AS") == name);
+
+            if (user == null)
+            {
+                WriteLine("No User Found!");
+                return;
+            }
+
+            if (user.Token == 'A')
+            {
+                var admin = context.Admins.FirstOrDefault(a => a.UserId == user.UserId);
+                if (admin == null)
+                {
+                    Console.WriteLine("ERROR! Couldn't find Admin profile.");
+                    return;
+                }
+
+                while (true)
+                {
+                    Console.WriteLine($"Are you sure you want to delete Admin '{admin.Name}'? (1 = Yes, 0 = No)");
+                    string input = Console.ReadLine();
+
+                    if (input == "1")
+                    {
+                        context.Admins.Remove(admin);
+                        context.Users.Remove(user);
+                        context.SaveChanges();
+                        Console.WriteLine($"Admin '{admin.Name}' has been removed successfully.");
+                        break;
+                    }
+                    else if (input == "0")
+                    {
+                        Console.WriteLine("Operation cancelled.");
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input! Please enter 1 (Yes) or 0 (No).");
+                    }
+                }
+            }
+            else if (user.Token == 'S')
+            {
+                var student = context.Students.FirstOrDefault(s => s.UserId == user.UserId);
+                if (student == null)
+                {
+                    Console.WriteLine("ERROR! Couldn't find Student profile.");
+                    return;
+                }
+
+                while (true)
+                {
+                    Console.WriteLine($"Are you sure you want to delete Student '{student.Name}'? (1 = Yes, 0 = No)");
+                    string input = Console.ReadLine();
+
+                    if (input == "1")
+                    {
+                        context.Students.Remove(student);
+                        context.Users.Remove(user);
+                        context.SaveChanges();
+                        Console.WriteLine($"Student '{student.Name}' has been removed successfully.");
+                        break;
+                    }
+                    else if (input == "0")
+                    {
+                        Console.WriteLine("Operation cancelled.");
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input! Please enter 1 (Yes) or 0 (No).");
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Unknown user type.");
+            }
+        }
+
+        public void addUser()
+        {
+            int choice;
+            while (true)
+            {
+                Console.WriteLine("Select user type:");
+                Console.WriteLine("1 - Admin");
+                Console.WriteLine("2 - Student");
+
+                string input = Console.ReadLine();
+                if (int.TryParse(input, out choice) && (choice == 1 || choice == 2))
+                    break;
+                else
+                    Console.WriteLine("Invalid choice! Please enter 1 for Admin or 2 for Student.");
+            }
+
+            Console.WriteLine("Enter Name: ");
+            string name = Console.ReadLine();
+
+            string email;
+            while (true)
+            {
+                Console.WriteLine("Enter Email: ");
+                email = Console.ReadLine();
+
+                if (IsValidEmail(email))
+                    break;
+                else
+                    Console.WriteLine("Invalid email format! Try again.");
+            }
+
+            Console.WriteLine("Enter Password: ");
+            string password = Console.ReadLine();
+
+            
+
+        
+
+            if (choice == 1) 
+            {
+                
+                var admin = new Admin
+                {
+
+                    Password = password,
+                    Email = email,
+                    Name = name
+                };
+                context.Admins.Add(admin);
+            }
+            else if (choice == 2) 
+            {
+                var student = new Student
+                {
+                    Password = password,
+                    Email = email,
+                    Name = name
+                };
+
+                context.Students.Add(student);
+            }
+
+            context.SaveChanges();
+            Console.WriteLine($"{(choice == 1 ? "Admin" : "Student")} '{name}' added successfully!");
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+
+            string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+            return Regex.IsMatch(email, pattern, RegexOptions.IgnoreCase);
+        }
+
+
 
     }
+
+
 
 
 
