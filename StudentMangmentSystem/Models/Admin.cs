@@ -1,4 +1,7 @@
-﻿using System;
+﻿using StudentMangmentSystem.Data;
+using StudentMangmentSystem.Repositories;
+using StudentMangmentSystem.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -12,7 +15,9 @@ namespace StudentMangmentSystem.Models
 
         public override void showMenu()
         {
-            var methods = new Methods();
+            var db = new StudentMangmentSystemDbContext();
+            var adminService = new AdminService(new AdminRepository(db));
+
             bool exit = false;
             while (!exit)
             {
@@ -30,63 +35,28 @@ namespace StudentMangmentSystem.Models
                 Console.WriteLine("0. Exit");
                 Console.Write("Select an option: ");
 
-                string choice = Console.ReadLine();
-                switch (choice)
+                switch (Console.ReadLine())
                 {
-                    case "1":
-                        methods.EnrollStudent();
-                        break;
-
-                    case "2":
-                        methods.DropStudent();
-
-                        break;
-
-                    case "3":
-
-                        methods.GetTop3Students();
-
-                        break;
-
+                    case "1": adminService.EnrollStudent(); break;
+                    case "2": adminService.DropStudent(); break;
+                    case "3": adminService.ShowTop3Students(); break;
                     case "4":
-
-                        methods.searchCourse();
-
+                        Console.Write("Enter course code or title: ");
+                        string keyword = Console.ReadLine();
+                        adminService.SearchCourse(keyword);
                         break;
-
-                    case "5":
-                        methods.setGrade();
-
-                        break;
-
-                    case "6":
-
-                        methods.viewUnEnrolledStudents();
-                        break;
-
-                    case "7":
-                        methods.ViewCoursesByStudents();
-                        break;
-                    case "8":
-                        methods.ViewFamousCourses();
-                        break;
-                    case "9":
-                        methods.viewAllStudents();
-                        break;
-                    case "10":
-                        methods.viewAllCourses();
-                        break;
-
-                    case "0":
-                        exit = true;
-                        break;
-
-                    default:
-                        Console.WriteLine("Invalid choice. Try again.");
-                        break;
+                    case "5": adminService.UpdateStudentGrade(); break;
+                    case "6": adminService.ViewUnenrolledStudents(); break;
+                    case "7": adminService.ViewCoursesByStudents(); break;
+                    case "8": adminService.ViewFamousCourses(); break;
+                    case "9": adminService.ViewAllStudents(); break;
+                    case "10": adminService.ViewAllCourses(); break;
+                    case "0": exit = true; break;
+                    default: Console.WriteLine("Invalid choice. Try again."); break;
                 }
             }
         }
+
         public override string ToString()
         {
             return $"ID: {UserId}, Name: {Name}, Email: {Email}";

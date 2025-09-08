@@ -1,4 +1,7 @@
-﻿using System;
+﻿using StudentMangmentSystem.Data;
+using StudentMangmentSystem.Repositories;
+using StudentMangmentSystem.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -12,7 +15,10 @@ namespace StudentMangmentSystem.Models
 
         public override void showMenu()
         {
-            var methods = new Methods();
+            using var context = new StudentMangmentSystemDbContext();
+            IStudentRepository studentRepository = new StudentRepository(context);
+            IStudentService studentService = new StudentService(studentRepository);
+
             bool exit = false;
             while (!exit)
             {
@@ -20,8 +26,8 @@ namespace StudentMangmentSystem.Models
                 Console.WriteLine("1. View Courses Enrolled");
                 Console.WriteLine("2. View All Courses");
                 Console.WriteLine("3. View Famous Courses");
-                Console.WriteLine("4. Search Course"); ;
-                Console.WriteLine("5. View GPA"); ;
+                Console.WriteLine("4. Search Course");
+                Console.WriteLine("5. View GPA");
                 Console.WriteLine("0. Exit");
                 Console.Write("Select an option: ");
 
@@ -29,31 +35,26 @@ namespace StudentMangmentSystem.Models
                 switch (choice)
                 {
                     case "1":
-                        methods.ViewCoursesTaken(UserId);
+                        studentService.ViewCoursesEnrolled(UserId);
                         break;
 
                     case "2":
-                        methods.viewAllCourses();
-
+                        studentService.ViewAllCourses();
                         break;
 
                     case "3":
-
-                        methods.ViewFamousCourses();
-
+                        studentService.ViewFamousCourses();
                         break;
 
                     case "4":
-
-                        methods.searchCourse();
-
+                        Console.Write("Enter course code or title: ");
+                        string keyword = Console.ReadLine();
+                        studentService.SearchCourse(keyword);
                         break;
 
                     case "5":
-
-                        methods.viewGpa(UserId);
+                        studentService.ViewGpa(UserId);
                         break;
-
 
                     case "0":
                         exit = true;

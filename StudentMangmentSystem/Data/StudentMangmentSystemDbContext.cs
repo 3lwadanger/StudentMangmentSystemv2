@@ -3,7 +3,7 @@ using StudentMangmentSystem.Models;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
-namespace StudentMangmentSystem.Models
+namespace StudentMangmentSystem.Data
 {
     public class StudentMangmentSystemDbContext : DbContext
     {
