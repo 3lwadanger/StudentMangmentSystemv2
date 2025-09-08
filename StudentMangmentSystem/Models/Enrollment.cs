@@ -12,8 +12,8 @@ namespace StudentMangmentSystem.Models
         
         [Key] public int StudentId    { get; set; }
         [Key] public int CourseId {  get; set; }
-        public double Grade {  get; set; }
-        public DateTime DateEnrolled { get; set; }
+        [Required] public double Grade {  get; set; }
+        [Required] public DateTime DateEnrolled { get; set; }
         public override string ToString()
         {
             return $"StudentId: {StudentId}, CourseId: {CourseId}, Grade: {Grade}, DateEnrolled: {DateEnrolled}";
